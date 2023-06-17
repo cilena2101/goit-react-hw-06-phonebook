@@ -1,18 +1,23 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
-import "./ContactForm.module.css";
+import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts, addContact } from '../../redux/slice';
 
-export const ContactForm = ({ onSubmit }) => {
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+import './ContactForm.module.css';
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+export const ContactForm = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
+  const handleChange = event => {
+    const { name, value } = event.target;
     switch (name) {
-      case "name":
+      case 'name':
         setName(value);
         break;
-      case "number":
+      case 'number':
         setNumber(value);
         break;
       default:
@@ -20,11 +25,24 @@ export const ContactForm = ({ onSubmit }) => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
-    onSubmit(name, number);
-    setName("");
-    setNumber("");
+    const contact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+
+    const enterContacts = contacts.some(
+      contact =>
+        (contact.name === name.toLowerCase() && contact.number === number) ||
+        contact.number === number
+    );
+    enterContacts
+      ? alert(`${name} or ${number} is already in contacts`)
+      : dispatch(addContact(contact));
+    setName('');
+    setNumber('');
   };
 
   return (
@@ -58,10 +76,4 @@ export const ContactForm = ({ onSubmit }) => {
       <button type="submit">Add contact</button>
     </form>
   );
-};
-
-ContactForm.prototypes = {
-  name: PropTypes.string.isRequired,
-  number: PropTypes.number.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };

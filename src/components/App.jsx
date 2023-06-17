@@ -22,14 +22,12 @@ const formSubmit = ( name, number ) => {
       number,
     };
 
-const  enterContacts = contacts.some(
-      i=>
-        (i.name === contact.name.toLowerCase() &&
-          i.number === contact.number) ??
-        i.number === contact.number
+const addContact = contacts.some(
+      el => (el.name === contact.name.toLowerCase() && el.number === contact.number) ??
+      el.number === contact.number
     );
 
-    enterContacts
+    addContact
       ? alert(`${name} or ${number} is already in contacts`)
       : setContacts([contact, ...contacts])  
         };
