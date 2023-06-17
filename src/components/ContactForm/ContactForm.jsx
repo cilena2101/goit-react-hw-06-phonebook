@@ -25,8 +25,9 @@ export const ContactForm = () => {
     }
   };
 
-  const handleSubmit = event => {
+    const handleSubmit = event => {
     event.preventDefault();
+    
     const contact = {
       id: nanoid(),
       name,
